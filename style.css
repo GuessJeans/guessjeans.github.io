@@ -5,3 +5,29 @@ video {
   max-height: 100vh; /* Ensures video doesn't exceed viewport height */
   object-fit: contain; /* Scales the video to fit within the container while maintaining aspect ratio */
 }
+
+.grid-container {
+    display: grid;
+    place-items: center; /* Centers both horizontally and vertically */
+    height: 100vh;
+    margin: 0;
+}
+
+#desktop {
+  display:block;
+}
+
+#mobile {
+  display:none;
+}
+
+@media screen and (max-width: 1000px) {
+    /* Hide the landscape video */
+    #desktop {
+        display: none;
+    }
+    /* Show the portrait video */
+    #mobile {
+        display: block;
+    }
+}
