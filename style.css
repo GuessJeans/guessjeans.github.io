@@ -1,0 +1,7 @@
+video {
+  width: 100%;       /* Video takes the full width of its container */
+  height: auto;      /* Height adjusts automatically to maintain aspect ratio */
+  max-width: 100%;
+  max-height: 100vh; /* Ensures video doesn't exceed viewport height */
+  object-fit: contain; /* Scales the video to fit within the container while maintaining aspect ratio */
+}
