@@ -50,7 +50,7 @@ function draw() {
 
     textSize(textH2); // UI
     textWeight(3*scale);
-    text("PLAY GAME", 25*scale, canvasY/2);
+    text("PLAY GAME v2", 25*scale, canvasY/2);
   } else if(gameState == 1){ // WHILE IN PLAY
     background(220);
 
