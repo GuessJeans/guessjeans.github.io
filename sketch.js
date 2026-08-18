@@ -1,10 +1,21 @@
 const startItemSpawnTime = 3000;
 const startItemSpeed = 4;
 const startPointGoal = 5;
-const bagSize = 100;
-const canvasX = 540;
-const canvasY = 960;
+const startBagSize = 100;
+const startItemSize = 50;
+const startTextH1 = 100;
+const startTextH2 = 50;
+const startTextH3 = 25;
+const gameAspect = .5625;
 
+let canvasX = 540;
+let canvasY = 960;
+let bagSize = startBagSize;
+let itemSize = startItemSize;
+let textH1 = startTextH1;
+let textH2 = startTextH2;
+let textH3 = startTextH3;
+let scale = 1;
 let items = [];
 let score = 0;
 let level = 1;
@@ -22,32 +33,35 @@ let itemSpeed = startItemSpeed;
 let pointGoal = startPointGoal;
 
 function setup() {
+  calcCanvas();
   createCanvas(canvasX, canvasY);
 }
 
-
+function windowResized(){
+  calcCanvas();
+  resizeCanvas(canvasX, canvasY);
+}
 
 function draw() {
-
   handleInput();
-  
+
   if(gameState == 0){
     background(220);
-    
-    textSize(50); // UI
-    strokeWeight(3);
-    text("PLAY GAME", 25, height/2);
+
+    textSize(textH2); // UI
+    textWeight(3*scale);
+    text("PLAY GAME", 25*scale, canvasY/2);
   } else if(gameState == 1){ // WHILE IN PLAY
     background(220);
 
     gameTime = gameTime + deltaTime;
     if(gameTime >= currentItemSpawnTime){
-      let xPos = random(width);
+      let xPos = random(canvasX);
       let item = new Item(xPos, 0);
       items.push(item);
       currentItemSpawnTime = currentItemSpawnTime + itemSpawnTime;
     }
-  
+
     for(let i=0; i<items.length; i++){
       items[i].move();
       items[i].show();
@@ -61,34 +75,50 @@ function draw() {
           nextLevel();
         }
       }
-      
+
     }
-  
-    strokeWeight(4);
+
+    strokeWeight(4*scale);
     square(bagX-(bagSize/2), bagY-(bagSize/2), bagSize); // bag
-  
-    textSize(50); // UI
-    strokeWeight(2);
-    text("level " + level, 25, 75);
-    textSize(25);
-    strokeWeight(1);
-    text("points: " + score, 25, 120);
-    
+
+    textSize(textH2); // UI
+    strokeWeight(2*scale);
+    text("level " + level, 25*scale, 75*scale);
+    textSize(textH3);
+    strokeWeight(1*scale);
+    text("points: " + score, 25*scale, 120*scale);
+
   } else if(gameState == 2){ // ENDING SCREEN
     background(220,80,80);
-    
-    textSize(50); // UI
-    strokeWeight(3);
-    text("GAME OVER", 25, 110);
-    textSize(50);
-    strokeWeight(2);
-    text("level " + level, 25, 175);
-    textSize(25);
-    strokeWeight(1);
-    text("points: " + score, 25, 220);
+
+    textSize(textH2); // UI
+    strokeWeight(3*scale);
+    text("GAME OVER", 25*scale, 110*scale);
+    textSize(textH2);
+    strokeWeight(2*scale);
+    text("level " + level, 25*scale, 175*scale);
+    textSize(textH3);
+    strokeWeight(1*scale);
+    text("points: " + score, 25*scale, 220*scale);
   }
 }
 
+function calcCanvas(){
+  browserAspect = windowWidth/windowHeight;
+  if (browserAspect > gameAspect){ // landscape browser
+    canvasY = windowHeight;
+    canvasX = windowHeight*gameAspect;
+  } else {
+    canvasX = windowWidth;
+    canvasY = windowWidth/gameAspect;
+  }
+  scale = canvasX/540;
+  bagSize = startBagSize*scale;
+  itemSize = startItemSize*scale;
+  textH1 = startTextH1*scale;
+  textH2 = startTextH2*scale;
+  textH3 = startTextH3*scale;
+}
 
 function handleInput(){
   if (touches.length > 0){
@@ -159,8 +189,8 @@ class Item {
 
   show(){
     stroke(10);
-    strokeWeight(4);
-    ellipse(this.x, this.y, 50);
+    strokeWeight(4*scale);
+    ellipse(this.x, this.y, itemSize);
   }
 
   inBag(mX,mY){
@@ -171,7 +201,7 @@ class Item {
     }
     return result;
   }
-  
+
   offScreen(){
     if(this.y > height){
       return true;
