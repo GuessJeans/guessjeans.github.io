@@ -29,7 +29,7 @@ let tapped = false;
 let touchMode = false;
 
 let itemSpawnTime = startItemSpawnTime;
-let itemSpeed = startItemSpeed*(Math.pow(1.25,level))*sc;
+let itemSpeed = startItemSpeed;
 let pointGoal = startPointGoal;
 
 function setup() {
@@ -118,6 +118,10 @@ function calcCanvas(){
   textH1 = startTextH1*sc;
   textH2 = startTextH2*sc;
   textH3 = startTextH3*sc;
+  calcItemSpeed();
+}
+
+function calcItemSpeed(){
   itemSpeed = startItemSpeed*(Math.pow(1.25,level))*sc;
 }
 
@@ -129,7 +133,7 @@ function handleInput(){
   if (!touchMode){
     bagX = mouseX;
     bagY = mouseY;
-  } else if (touches[0] !== null){
+  } else if (touches.length > 0){
     bagX = touches[0].x;
     bagY = touches[0].y;
     isTouching = true;
@@ -151,22 +155,21 @@ function interact(){
   if(gameState == 0){
     resetGame();
     gameState++;
-  }
-  if(gameState == 2){
+  } else if(gameState == 2){
     resetGame();
   }
 }
 
 function nextLevel(){
   level++;
-  itemSpeed = startItemSpeed*(Math.pow(1.25,level))*sc;
+  calcItemSpeed();
   itemSpawnTime = itemSpawnTime * .5;
   pointGoal = pointGoal*2;
 }
 
 function resetGame(){
   itemSpawnTime = startItemSpawnTime;
-  itemSpeed = startItemSpeed*sc;
+  calcItemSpeed();
   pointGoal = startPointGoal;
   items.length = 0;
   score = 0;
