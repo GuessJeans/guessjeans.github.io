@@ -15,7 +15,7 @@ let itemSize = startItemSize;
 let textH1 = startTextH1;
 let textH2 = startTextH2;
 let textH3 = startTextH3;
-let scale = 1;
+let sc = 1;
 let items = [];
 let score = 0;
 let level = 1;
@@ -29,7 +29,7 @@ let tapped = false;
 let touchMode = false;
 
 let itemSpawnTime = startItemSpawnTime;
-let itemSpeed = startItemSpeed;
+let itemSpeed = startItemSpeed*(Math.pow(1.25,level))*sc;
 let pointGoal = startPointGoal;
 
 function setup() {
@@ -49,8 +49,8 @@ function draw() {
     background(220);
 
     textSize(textH2); // UI
-    textWeight(3*scale);
-    text("PLAY GAME v2", 25*scale, canvasY/2);
+    textWeight(3*sc);
+    text("PLAY GAME v2", 25*sc, canvasY/2);
   } else if(gameState == 1){ // WHILE IN PLAY
     background(220);
 
@@ -78,28 +78,28 @@ function draw() {
 
     }
 
-    strokeWeight(4*scale);
+    strokeWeight(4*sc);
     square(bagX-(bagSize/2), bagY-(bagSize/2), bagSize); // bag
 
     textSize(textH2); // UI
-    strokeWeight(2*scale);
-    text("level " + level, 25*scale, 75*scale);
+    strokeWeight(2*sc);
+    text("level " + level, 25*sc, 75*sc);
     textSize(textH3);
-    strokeWeight(1*scale);
-    text("points: " + score, 25*scale, 120*scale);
+    strokeWeight(1*sc);
+    text("points: " + score, 25*sc, 120*sc);
 
   } else if(gameState == 2){ // ENDING SCREEN
     background(220,80,80);
 
     textSize(textH2); // UI
-    strokeWeight(3*scale);
-    text("GAME OVER", 25*scale, 110*scale);
+    strokeWeight(3*sc);
+    text("GAME OVER", 25*sc, 110*sc);
     textSize(textH2);
-    strokeWeight(2*scale);
-    text("level " + level, 25*scale, 175*scale);
+    strokeWeight(2*sc);
+    text("level " + level, 25*sc, 175*sc);
     textSize(textH3);
-    strokeWeight(1*scale);
-    text("points: " + score, 25*scale, 220*scale);
+    strokeWeight(1*sc);
+    text("points: " + score, 25*sc, 220*sc);
   }
 }
 
@@ -112,12 +112,13 @@ function calcCanvas(){
     canvasX = windowWidth;
     canvasY = windowWidth/gameAspect;
   }
-  scale = canvasX/540;
-  bagSize = startBagSize*scale;
-  itemSize = startItemSize*scale;
-  textH1 = startTextH1*scale;
-  textH2 = startTextH2*scale;
-  textH3 = startTextH3*scale;
+  sc = canvasX/540;
+  bagSize = startBagSize*sc;
+  itemSize = startItemSize*sc;
+  textH1 = startTextH1*sc;
+  textH2 = startTextH2*sc;
+  textH3 = startTextH3*sc;
+  itemSpeed = startItemSpeed*(Math.pow(1.25,level))*sc;
 }
 
 function handleInput(){
@@ -158,14 +159,14 @@ function interact(){
 
 function nextLevel(){
   level++;
-  itemSpeed = itemSpeed + 2;
+  itemSpeed = startItemSpeed*(Math.pow(1.25,level))*sc;
   itemSpawnTime = itemSpawnTime * .5;
   pointGoal = pointGoal*2;
 }
 
 function resetGame(){
   itemSpawnTime = startItemSpawnTime;
-  itemSpeed = startItemSpeed;
+  itemSpeed = startItemSpeed*sc;
   pointGoal = startPointGoal;
   items.length = 0;
   score = 0;
@@ -189,7 +190,7 @@ class Item {
 
   show(){
     stroke(10);
-    strokeWeight(4*scale);
+    strokeWeight(4*sc);
     ellipse(this.x, this.y, itemSize);
   }
 
