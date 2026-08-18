@@ -118,6 +118,7 @@ function calcCanvas(){
   textH1 = startTextH1*sc;
   textH2 = startTextH2*sc;
   textH3 = startTextH3*sc;
+  bagY = canvasY - bagSize;
   calcItemSpeed();
 }
 
@@ -132,10 +133,10 @@ function handleInput(){
 
   if (!touchMode){
     bagX = mouseX;
-    bagY = mouseY;
+    //bagY = mouseY;
   } else if (touches.length > 0){
     bagX = touches[0].x;
-    bagY = touches[0].y;
+    //bagY = touches[0].y;
     isTouching = true;
     if(isTouching !== tapped){
       interact();
