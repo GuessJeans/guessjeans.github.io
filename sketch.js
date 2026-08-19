@@ -1,7 +1,7 @@
-const startItemSpawnTime = 3000;
-const startItemSpeed = 4;
-const startPointGoal = 5;
-const startBagSize = 100;
+const startItemSpawnTime = 2500;
+const startItemSpeed = 5;
+const startPointGoal = 3;
+const startBagSize = 150;
 const startItemSize = 50;
 const startTextH1 = 100;
 const startTextH2 = 50;
@@ -22,22 +22,28 @@ let level = 1;
 let currentItemSpawnTime = 0;
 let gameState = 0;
 let gameTime = 0;
+let handleX = canvasX/2;
+let handleY = canvasY - bagSize;
 let bagX = canvasX/2;
 let bagY = canvasY - bagSize;
 let isTouching = false;
 let tapped = false;
 let touchMode = false;
+let bag;
 
 let itemSpawnTime = startItemSpawnTime;
 let itemSpeed = startItemSpeed;
 let pointGoal = startPointGoal;
 
 let img_bag;
+let img_bg;
 
 async function setup() {
   img_bag = await loadImage('img/Bag_A_512x512.png');
+  img_bg = await loadImage('img/bg_540x960.png');
   calcCanvas();
   createCanvas(canvasX, canvasY);
+  bag = new Bag();
 }
 
 function windowResized(){
@@ -55,7 +61,7 @@ function draw() {
     textWeight(3*sc);
     text("PLAY GAME v2", 25*sc, canvasY/2);
   } else if(gameState == 1){ // WHILE IN PLAY
-    background(220);
+    image(img_bg, 0, 0, canvasX, canvasY);
 
     gameTime = gameTime + deltaTime;
     if(gameTime >= currentItemSpawnTime){
@@ -73,6 +79,7 @@ function draw() {
       }
       if(items[i].inBag(bagX, bagY)){
         score++;
+        bag.goodAnim();
         items.splice(i,1);
         if (score >= pointGoal){
           nextLevel();
@@ -82,8 +89,9 @@ function draw() {
     }
 
     strokeWeight(4*sc);
-    square(bagX-(bagSize/2), bagY-(bagSize/2), bagSize); // bag
-    image(img_bag, 100, 100);
+    //square(bagX-(bagSize/2), bagY-(bagSize/2), bagSize); // bag
+    bag.move();
+    bag.show();
 
     textSize(textH2); // UI
     strokeWeight(2*sc);
@@ -168,7 +176,7 @@ function interact(){
 function nextLevel(){
   level++;
   calcItemSpeed();
-  itemSpawnTime = itemSpawnTime * .5;
+  itemSpawnTime = itemSpawnTime * .6;
   pointGoal = pointGoal*2;
 }
 
@@ -205,7 +213,7 @@ class Item {
   inBag(mX,mY){
     let result = false;
     let d = dist(mX, mY, this.x, this.y);
-    if(d <= bagSize){
+    if((d-(itemSize/2)) <= (bagSize/2)){
       result = true;
     }
     return result;
@@ -219,3 +227,39 @@ class Item {
     }
   }
 }
+
+class Bag {
+  constructor(){
+    this.x = bagX-(bagSize/2);
+    this.y = bagY-(bagSize/2);
+    this.r = 0;
+    this.speed = 0;
+    this.acceleration = 0;
+    this.scaleAdd = 0;
+  }
+
+  move(){
+    let lastX = this.x;
+    let lastSpeed = this.speed;
+    this.x = bagX;
+    //this.y = bagY-(bagSize/2);
+    this.speed = (this.x - lastX)/100;
+    this.r = (this.r + this.speed)*.8;
+  }
+  
+  goodAnim(){
+    this.scaleAdd = 20;
+  }
+
+  show(){
+    //circle(this.x,this.y,bagSize/2);
+    push();
+    imageMode(CENTER);
+    translate(this.x, this.y);
+    rotate(this.r);
+    image(img_bag, 0, bagSize/2, bagSize+this.scaleAdd, bagSize+this.scaleAdd);
+    pop();
+    
+    this.scaleAdd = this.scaleAdd*.8;
+  }
+};
