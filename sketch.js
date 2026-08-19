@@ -32,7 +32,10 @@ let itemSpawnTime = startItemSpawnTime;
 let itemSpeed = startItemSpeed;
 let pointGoal = startPointGoal;
 
-function setup() {
+let img_bag;
+
+async function setup() {
+  img_bag = await loadImage('img/Bag_A_512x512.png');
   calcCanvas();
   createCanvas(canvasX, canvasY);
 }
@@ -80,6 +83,7 @@ function draw() {
 
     strokeWeight(4*sc);
     square(bagX-(bagSize/2), bagY-(bagSize/2), bagSize); // bag
+    image(img_bag, 100, 100);
 
     textSize(textH2); // UI
     strokeWeight(2*sc);
