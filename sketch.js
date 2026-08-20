@@ -46,6 +46,25 @@ let f2;
 let f3;
 
 async function setup() {
+  //default image
+  let img_default = createImage(64,64);
+  img_default.loadPixels();
+  for (let x = 0; x < img_default.width; x += 1) {
+    for (let y = 0; y < img_default.height; y += 1) {
+      img_default.set(x, y, 0);
+    }
+  }
+  img_default.updatePixels();
+  
+  img_bag = img_default;
+  img_bg = img_default;
+  img_energy = img_default;
+  img_phone = img_default;
+  
+  //for (let i=0; i < images.length; i++){
+  //  images[i] = img_default;
+  //}
+  
   img_bag = await loadImage('img/Bag_D_512x512.png');
   img_bg = await loadImage('img/bg_B_540x960.png');
   img_energy = await loadImage('img/item_good_energy.png');
