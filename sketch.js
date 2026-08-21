@@ -7,6 +7,8 @@ const startTextH1 = 80;
 const startTextH2 = 50;
 const startTextH3 = 35;
 const gameAspect = .5625;
+const look = 2; // 1=flat 2=pixel
+const dots = false;
 
 let canvasX = 540;
 let canvasY = 960;
@@ -66,13 +68,23 @@ async function setup() {
   //}
   
   // remember to capitalize things correctly!
-  img_bag = await loadImage('img/Bag_D_512x512.png');
-  img_bg = await loadImage('img/bg_B_540x960.png');
+  if(look==1){
+    img_bag = await loadImage('img/Bag_D_512x512.png');
+  } else {
+    img_bag = await loadImage('img/Bag_F.png');
+  }
+  //img_bg = await loadImage('img/bg_540x960.png');
   img_energy = await loadImage('img/item_good_energy.png');
   img_phone = await loadImage('img/item_bad_phone.png');
-  f1 = await loadFont('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap'); // serif
-  f2 = await loadFont('https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&display=swap'); // serif italics
-  f3 = await loadFont('https://fonts.googleapis.com/css2?family=Outfit:wght@550&display=swap'); // sans
+  if (look == 1){
+    f1 = await loadFont('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap'); // serif
+    f2 = await loadFont('https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&display=swap'); // serif italics
+    f3 = await loadFont('https://fonts.googleapis.com/css2?family=Outfit:wght@550&display=swap'); // sans
+  } else {
+    f1 = await loadFont('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
+    f2 = await loadFont('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
+    f3 = await loadFont('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
+  }
   
   c1 = color(250,245,240); // bg color
   c2 = color(10,35,60); // text color
@@ -111,6 +123,7 @@ function draw() {
     text("ALLEGRA?", canvasX/2, canvasY*.3);
     
     imageMode(CENTER);
+    noSmooth();
     image(img_bag, canvasX/2, canvasY*.55, canvasY*.3, canvasY*.3)
     
     rectMode(CENTER);
@@ -123,7 +136,8 @@ function draw() {
     text("PLAY", canvasX/2, canvasY*.8);
     
   } else if(gameState == 1){ // WHILE IN PLAY
-    //image(img_bg, 0, 0, canvasX, canvasY);
+    //imageMode(CORNER);
+;   //image(img_bg, 0, 0, canvasX*sc, canvasY*sc);
     background(c1);
 
     gameTime = gameTime + deltaTime;
@@ -292,9 +306,12 @@ class Item {
     }
     stroke(c2);
     strokeWeight(4*sc);
-    ellipse(this.x, this.y, itemSize);
-    //imageMode(CENTER);
-    //image(img_energy, this.x, this.y, itemSize*2, itemSize*2);
+    if (dots){
+      ellipse(this.x, this.y, itemSize);
+    } else {
+      imageMode(CENTER);
+      image(img_energy, this.x, this.y, itemSize*2, itemSize*2);
+    }
     pop();
   }
 
@@ -350,6 +367,7 @@ class Bag {
     imageMode(CENTER);
     translate(this.x, this.y);
     rotate(this.r);
+    noSmooth();
     image(img_bag, 0, bagSize/2, bagSize+this.scaleAdd, bagSize+this.scaleAdd);
     pop();
     
