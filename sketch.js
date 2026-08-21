@@ -65,6 +65,7 @@ async function setup() {
   //  images[i] = img_default;
   //}
   
+  // remember to capitalize things correctly!
   img_bag = await loadImage('img/Bag_D_512x512.png');
   img_bg = await loadImage('img/bg_B_540x960.png');
   img_energy = await loadImage('img/item_good_energy.png');
