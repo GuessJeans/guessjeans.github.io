@@ -3,9 +3,9 @@ const startItemSpeed = 5;
 const startPointGoal = 3;
 const startBagSize = 150;
 const startItemSize = 50;
-const startTextH1 = 80;
-const startTextH2 = 50;
-const startTextH3 = 35;
+const startTextH1 = 100; //flat=80 pixel=100
+const startTextH2 = 50; // flat=50 pixel=
+const startTextH3 = 35; // flat=35 pixel=
 const gameAspect = .5625;
 const look = 2; // 1=flat 2=pixel
 const dots = false;
@@ -81,7 +81,7 @@ async function setup() {
     f2 = await loadFont('https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&display=swap'); // serif italics
     f3 = await loadFont('https://fonts.googleapis.com/css2?family=Outfit:wght@550&display=swap'); // sans
   } else {
-    f1 = await loadFont('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
+    f1 = await loadFont('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
     f2 = await loadFont('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
     f3 = await loadFont('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
   }
@@ -124,7 +124,7 @@ function draw() {
     
     imageMode(CENTER);
     noSmooth();
-    image(img_bag, canvasX/2, canvasY*.55, canvasY*.3, canvasY*.3)
+    image(img_bag, canvasX/2, canvasY*.58, canvasY*.3, canvasY*.3)
     
     rectMode(CENTER);
     rect(canvasX/2, canvasY*.8, 250*sc, 80*sc, 25*sc);
