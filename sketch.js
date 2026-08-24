@@ -1,11 +1,11 @@
-const startItemSpawnTime = 2500;
+const startItemSpawnTime = 3000;
 const startItemSpeed = 5;
 const startPointGoal = 3;
-const startBagSize = 150;
-const startItemSize = 50;
-const startTextH1 = 100; //flat=80 pixel=100
-const startTextH2 = 50; // flat=50 pixel=
-const startTextH3 = 35; // flat=35 pixel=
+let startBagSize = 150; // set in setup
+let startItemSize = 50; // set in setup
+let startTextH1 = 100; // set in setup
+let startTextH2 = 50; // set in setup
+let startTextH3 = 35; // set in setup
 const gameAspect = .5625;
 const look = 2; // 1=flat 2=pixel
 const dots = false;
@@ -39,8 +39,12 @@ let pointGoal = startPointGoal;
 
 let img_bag;
 let img_bg;
-let img_energy;
-let img_phone;
+let img_good1;
+let img_good2;
+let img_bad1;
+let img_bad2;
+let itemImagesGood;
+let itemImagesBad;
 let c1;
 let c2;
 let f1;
@@ -60,8 +64,10 @@ async function setup() {
   
   img_bag = img_default;
   img_bg = img_default;
-  img_energy = img_default;
-  img_phone = img_default;
+  img_good1 = img_default;
+  img_good2 = img_default;
+  img_bad1 = img_default;
+  img_bad2 = img_default;
   
   //for (let i=0; i < images.length; i++){
   //  images[i] = img_default;
@@ -69,13 +75,37 @@ async function setup() {
   
   // remember to capitalize things correctly!
   if(look==1){
-    img_bag = await loadImage('img/Bag_D_512x512.png');
+    img_bag = await loadImage('img/flat_bag.png');
+    img_good1 = await loadImage('img/flat_good1.png');
+    img_good2 = await loadImage('img/flat_good2.png');
+    img_bad1 = await loadImage('img/flat_bad1.png');
+    img_bad2 = await loadImage('img/flat_bad2.png');
+    
+    startTextH1 = 80;
+    startTextH2 = 50;
+    startTextH3 = 35;
+    
+    startBagSize = 150;
+    startItemSize = 60;
   } else {
-    img_bag = await loadImage('img/Bag_F.png');
+    img_bg = await loadImage('img/pixel_bg.png');
+    img_bag = await loadImage('img/pixel_bag.png');
+    img_good1 = await loadImage('img/pixel_good1.png');
+    img_good2 = await loadImage('img/pixel_good2.png');
+    img_bad1 = await loadImage('img/pixel_bad1.png');
+    img_bad2 = await loadImage('img/pixel_bad2.png');
+    
+    startTextH1 = 100;
+    startTextH2 = 50;
+    startTextH3 = 35;
+    
+    startBagSize = 165;
+    startItemSize = 40;
   }
-  //img_bg = await loadImage('img/bg_540x960.png');
-  img_energy = await loadImage('img/item_good_energy.png');
-  img_phone = await loadImage('img/item_bad_phone.png');
+  
+  itemImagesGood = [img_good1, img_good2];
+  itemImagesBad = [img_bad1, img_bad2];
+
   if (look == 1){
     f1 = await loadFont('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap'); // serif
     f2 = await loadFont('https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&display=swap'); // serif italics
@@ -99,11 +129,17 @@ function windowResized(){
   resizeCanvas(canvasX, canvasY);
 }
 
-function draw() {
+function draw() { 
   handleInput();
 
-  if(gameState == 0){
-    background(c1);
+  if(gameState == 0){ // LOAD SCREEN ///////////////////////////////////////////////////////////////////////////////////////
+    if(look==1){
+      background(c1);
+    } else {
+      imageMode(CORNER);
+      image(img_bg, 0,0,canvasX,canvasY);
+    }
+    
 
     noStroke();
     fill(c2);
@@ -124,7 +160,12 @@ function draw() {
     
     imageMode(CENTER);
     noSmooth();
-    image(img_bag, canvasX/2, canvasY*.58, canvasY*.3, canvasY*.3)
+    
+    if (look==1){
+      image(img_bag, canvasX/2, canvasY*.56, canvasY*.3, canvasY*.3); // flat
+    } else {
+      image(img_bag, canvasX/2, canvasY*.59, canvasY*.35, canvasY*.35); // pixel
+    }
     
     rectMode(CENTER);
     rect(canvasX/2, canvasY*.8, 250*sc, 80*sc, 25*sc);
@@ -135,14 +176,17 @@ function draw() {
     fill(255);
     text("PLAY", canvasX/2, canvasY*.8);
     
-  } else if(gameState == 1){ // WHILE IN PLAY
-    //imageMode(CORNER);
-;   //image(img_bg, 0, 0, canvasX*sc, canvasY*sc);
-    background(c1);
+  } else if(gameState == 1){ // WHILE IN PLAY ////////////////////////////////////////////////////////////////////////////////
+    if (look==1){
+      background(c1);
+    } else {
+      imageMode(CORNER);
+      image(img_bg, 0, 0, canvasX, canvasY);
+    }
 
     gameTime = gameTime + deltaTime;
     if(gameTime >= currentItemSpawnTime){
-      let xPos = random(canvasX);
+      let xPos = random(itemSize, canvasX - itemSize);
       let item = new Item(xPos, 0);
       items.push(item);
       currentItemSpawnTime = currentItemSpawnTime + itemSpawnTime;
@@ -185,7 +229,7 @@ function draw() {
     text(score, canvasX/2, 100*sc);
     pop();
 
-  } else if(gameState == 2){ // ENDING SCREEN
+  } else if(gameState == 2){ // ENDING SCREEN ////////////////////////////////////////////////////////////////////////////////
     background(c2);
     
     noStroke();
@@ -287,9 +331,13 @@ class Item {
     this.x = x;
     this.y = y;
     this.isGood = true;
+    this.img;
     let ran = random(1);
     if (ran > .9){
       this.isGood = false;
+      this.img = itemImagesBad[Math.floor(Math.random() * itemImagesBad.length)];
+    } else {
+      this.img = itemImagesGood[Math.floor(Math.random() * itemImagesGood.length)];
     }
   }
 
@@ -299,19 +347,22 @@ class Item {
 
   show(){
     push();
-    if(this.isGood){
-      fill(255);
-    } else {
-      fill(255,0,0);
-    }
-    stroke(c2);
-    strokeWeight(4*sc);
-    if (dots){
-      ellipse(this.x, this.y, itemSize);
-    } else {
-      imageMode(CENTER);
-      image(img_energy, this.x, this.y, itemSize*2, itemSize*2);
-    }
+    //if(this.isGood){
+    //  fill(255);
+    //} else {
+    //  fill(255,0,0);
+    //}
+    //stroke(c2);
+    //strokeWeight(4*sc);
+    //if (dots){
+    //  ellipse(this.x, this.y, itemSize);
+    //} else {
+    //  imageMode(CENTER);
+    //  image(img_good1, this.x, this.y, itemSize*2, itemSize*2);
+    //}
+
+    imageMode(CENTER);
+    image(this.img, this.x, this.y, itemSize*2, itemSize*2);
     pop();
   }
 
@@ -346,7 +397,7 @@ class Bag {
   move(){
     let lastX = this.x;
     let lastSpeed = this.speed;
-    this.x = bagX;
+    this.x = constrain(bagX, bagSize/2, canvasX - (bagSize/2));
     //this.y = bagY;
     this.speed = (this.x - lastX)/100;
     this.r = (this.r + this.speed)*.8;
