@@ -194,7 +194,7 @@ function draw() {
 
     for(let i=0; i<items.length; i++){
       items[i].move();
-      items[i].show();
+      //items[i].show();
       if(items[i].offScreen() && items[i].isGood){
         gameState++;
       }
@@ -211,8 +211,9 @@ function draw() {
         }
         items.splice(i,1);
       }
-
     }
+    
+    showAllItems();
 
     //strokeWeight(4*sc);
     //square(bagX-(bagSize/2), bagY-(bagSize/2), bagSize); // bag
@@ -322,6 +323,12 @@ function resetGame(){
   currentItemSpawnTime = 0;
   gameState = 0;
   gameTime = 0;
+}
+
+function showAllItems(){
+  for(let i=0; i<items.length; i++){
+      items[i].show();
+  }
 }
 
 
