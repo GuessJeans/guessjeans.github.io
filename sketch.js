@@ -240,7 +240,7 @@ function draw() {
 
     push();
     //noStroke();
-    strokeWeight(8);
+    strokeWeight(10*sc);
     stroke(250);
     fill(c2);
     textFont(f1);
