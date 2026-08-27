@@ -399,6 +399,9 @@ class Item {
   inBag(mX,mY){
     let result = false;
     let d = dist(mX, mY, this.x, this.y);
+    if (!this.isGood){
+      d = d+(5*sc);
+    }
     if((d-(itemSize/2)) <= (bagSize/2)){
       result = true;
     }

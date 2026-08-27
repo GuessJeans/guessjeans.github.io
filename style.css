@@ -4,6 +4,7 @@ canvas {
 
 html, body {
   height: 100%;
+  background-color: rgb(255, 246, 224);
 }
 
 body {
