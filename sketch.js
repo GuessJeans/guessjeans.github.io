@@ -1,3 +1,5 @@
+// NOTES: ask cooper to remove red from bookmark & key
+
 const startItemSpawnTime = 3000;
 const startItemSpeed = 5;
 const startPointGoal = 3;
@@ -44,6 +46,9 @@ let img_good2;
 let img_good3;
 let img_good4;
 let img_good5;
+let img_good6;
+let img_good7;
+let img_good8;
 let img_bad1;
 //let img_bad2;
 let itemImagesGood;
@@ -72,38 +77,21 @@ async function setup() {
   img_good3 = img_default;
   img_good4 = img_default;
   img_good5 = img_default;
+  img_good6 = img_default;
+  img_good7 = img_default;
+  img_good8 = img_default;
   img_bad1 = img_default;
-  //img_bad2 = img_default;
   
-  //for (let i=0; i < images.length; i++){
-  //  images[i] = img_default;
-  //}
-  
-  // remember to capitalize things correctly!
-  if(look==1){
-    img_bag = await loadImage('img/flat_bag.png');
-    img_good1 = await loadImage('img/flat_good1.png');
-    img_good2 = await loadImage('img/flat_good2.png');
-    img_good3 = await loadImage('img/flat_good3.png');
-    img_good4 = await loadImage('img/flat_good4.png');
-    img_good5 = await loadImage('img/flat_good5.png');
-    img_bad1 = await loadImage('img/flat_bad1.png');
-    //img_bad2 = await loadImage('img/flat_bad2.png');
-    
-    startTextH1 = 80;
-    startTextH2 = 50;
-    startTextH3 = 35;
-    
-    startBagSize = startBagSize*.9;
-    startItemSize = startItemSize*1.5;
-  } else {
-    img_bg = await loadImage('img/pixel_bg.png');
-    img_bag = await loadImage('img/pixel_bag.png');
-    img_good1 = await loadImage('img/pixel_good1.png');
-    img_good2 = await loadImage('img/pixel_good2.png');
-    img_good3 = await loadImage('img/pixel_good3.png');
-    img_good4 = await loadImage('img/pixel_good4.png');
-    img_good5 = await loadImage('img/pixel_good5.png');
+  img_bg = await loadImage('img/pixel_bg.png');
+  img_bag = await loadImage('img/pixel_bag.png');
+  img_good1 = await loadImage('img/pixel_good1.png');
+  img_good2 = await loadImage('img/pixel_good2.png');
+  img_good3 = await loadImage('img/pixel_good3.png');
+  img_good4 = await loadImage('img/pixel_good4.png');
+  img_good5 = await loadImage('img/pixel_good5.png');
+  img_good6 = await loadImage('img/pixel_good6.png');
+  img_good7 = await loadImage('img/pixel_good7.png');
+  img_good8 = await loadImage('img/pixel_good8.png');
     img_bad1 = await loadImage('img/pixel_bad1.png');
     //img_bad2 = await loadImage('img/pixel_bad2.png');
     
@@ -113,9 +101,8 @@ async function setup() {
     
     startBagSize = startBagSize;
     startItemSize = startItemSize;
-  }
   
-  itemImagesGood = [img_good1, img_good2, img_good3, img_good4, img_good5];
+  itemImagesGood = [img_good1, img_good2, img_good3, img_good4, img_good5, img_good6, img_good7, img_good8];
   itemImagesBad = [img_bad1];
 
   if (look == 1){
