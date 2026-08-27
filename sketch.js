@@ -1,8 +1,8 @@
 const startItemSpawnTime = 3000;
 const startItemSpeed = 5;
 const startPointGoal = 3;
-let startBagSize = 150; // set in setup
-let startItemSize = 50; // set in setup
+let startBagSize = 175;
+let startItemSize = 45;
 let startTextH1 = 100; // set in setup
 let startTextH2 = 50; // set in setup
 let startTextH3 = 35; // set in setup
@@ -94,8 +94,8 @@ async function setup() {
     startTextH2 = 50;
     startTextH3 = 35;
     
-    startBagSize = 150;
-    startItemSize = 60;
+    startBagSize = startBagSize*.9;
+    startItemSize = startItemSize*1.5;
   } else {
     img_bg = await loadImage('img/pixel_bg.png');
     img_bag = await loadImage('img/pixel_bag.png');
@@ -111,8 +111,8 @@ async function setup() {
     startTextH2 = 50;
     startTextH3 = 35;
     
-    startBagSize = 165;
-    startItemSize = 40;
+    startBagSize = startBagSize;
+    startItemSize = startItemSize;
   }
   
   itemImagesGood = [img_good1, img_good2, img_good3, img_good4, img_good5];
@@ -285,6 +285,9 @@ function calcCanvas(){
   textH3 = startTextH3*sc;
   bagY = canvasY - bagSize;
   calcItemSpeed();
+  //console.log("scale: " + scale);
+  //console.log("bagSize: " + bagSize);
+  //console.log("itemSize: " + itemSize);
 }
 
 function calcItemSpeed(){
@@ -425,7 +428,7 @@ class Bag {
     let lastX = this.x;
     let lastSpeed = this.speed;
     this.x = constrain(bagX, bagSize/2, canvasX - (bagSize/2));
-    //this.y = bagY;
+    this.y = canvasY - bagSize;
     this.speed = (this.x - lastX)/100;
     this.r = (this.r + this.speed)*.8;
     this.r = map(this.r, -1, 1, -1, 1, true);
