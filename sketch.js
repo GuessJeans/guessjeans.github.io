@@ -41,8 +41,11 @@ let img_bag;
 let img_bg;
 let img_good1;
 let img_good2;
+let img_good3;
+let img_good4;
+let img_good5;
 let img_bad1;
-let img_bad2;
+//let img_bad2;
 let itemImagesGood;
 let itemImagesBad;
 let c1;
@@ -66,8 +69,11 @@ async function setup() {
   img_bg = img_default;
   img_good1 = img_default;
   img_good2 = img_default;
+  img_good3 = img_default;
+  img_good4 = img_default;
+  img_good5 = img_default;
   img_bad1 = img_default;
-  img_bad2 = img_default;
+  //img_bad2 = img_default;
   
   //for (let i=0; i < images.length; i++){
   //  images[i] = img_default;
@@ -78,8 +84,11 @@ async function setup() {
     img_bag = await loadImage('img/flat_bag.png');
     img_good1 = await loadImage('img/flat_good1.png');
     img_good2 = await loadImage('img/flat_good2.png');
+    img_good3 = await loadImage('img/flat_good3.png');
+    img_good4 = await loadImage('img/flat_good4.png');
+    img_good5 = await loadImage('img/flat_good5.png');
     img_bad1 = await loadImage('img/flat_bad1.png');
-    img_bad2 = await loadImage('img/flat_bad2.png');
+    //img_bad2 = await loadImage('img/flat_bad2.png');
     
     startTextH1 = 80;
     startTextH2 = 50;
@@ -92,8 +101,11 @@ async function setup() {
     img_bag = await loadImage('img/pixel_bag.png');
     img_good1 = await loadImage('img/pixel_good1.png');
     img_good2 = await loadImage('img/pixel_good2.png');
+    img_good3 = await loadImage('img/pixel_good3.png');
+    img_good4 = await loadImage('img/pixel_good4.png');
+    img_good5 = await loadImage('img/pixel_good5.png');
     img_bad1 = await loadImage('img/pixel_bad1.png');
-    img_bad2 = await loadImage('img/pixel_bad2.png');
+    //img_bad2 = await loadImage('img/pixel_bad2.png');
     
     startTextH1 = 100;
     startTextH2 = 50;
@@ -103,8 +115,8 @@ async function setup() {
     startItemSize = 40;
   }
   
-  itemImagesGood = [img_good1, img_good2];
-  itemImagesBad = [img_bad1, img_bad2];
+  itemImagesGood = [img_good1, img_good2, img_good3, img_good4, img_good5];
+  itemImagesBad = [img_bad1];
 
   if (look == 1){
     f1 = await loadFont('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap'); // serif
@@ -138,10 +150,13 @@ function draw() {
     } else {
       imageMode(CORNER);
       image(img_bg, 0,0,canvasX,canvasY);
+      background(255,255,255,160);
     }
     
 
-    noStroke();
+    //noStroke();
+    //strokeWeight(5);
+    //stroke(252, 195, 114);
     fill(c2);
     textSize(textH1); // UI
     textFont(f1);
@@ -157,6 +172,8 @@ function draw() {
     textFont(f1);
     textAlign(CENTER, CENTER);
     text("ALLEGRA?", canvasX/2, canvasY*.3);
+    
+    noStroke();
     
     imageMode(CENTER);
     noSmooth();
@@ -182,6 +199,7 @@ function draw() {
     } else {
       imageMode(CORNER);
       image(img_bg, 0, 0, canvasX, canvasY);
+      background(255,255,255,100);
     }
 
     gameTime = gameTime + deltaTime;
@@ -221,7 +239,9 @@ function draw() {
     bag.show();
 
     push();
-    noStroke();
+    //noStroke();
+    strokeWeight(8);
+    stroke(250);
     fill(c2);
     textFont(f1);
     textAlign(CENTER);
