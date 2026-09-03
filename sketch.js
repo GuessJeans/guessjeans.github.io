@@ -3,6 +3,9 @@
 const startItemSpawnTime = 3000;
 const startItemSpeed = 5;
 const startPointGoal = 3;
+const levelSpawnMult = .8;
+const levelSpeedMult = 1.12;
+const levelGoalMult = 1.5;
 let startBagSize = 175;
 let startItemSize = 45;
 let startTextH1 = 100; // set in setup
@@ -22,6 +25,7 @@ let textH3 = startTextH3;
 let sc = 1;
 let items = [];
 let score = 0;
+let lives = 3;
 let level = 1;
 let currentItemSpawnTime = 0;
 let gameState = 0;
@@ -34,11 +38,15 @@ let isTouching = false;
 let tapped = false;
 let touchMode = false;
 let bag;
+let anim = .8;
 
 let itemSpawnTime = startItemSpawnTime;
 let itemSpeed = startItemSpeed;
 let pointGoal = startPointGoal;
 
+let img_bg_blue;
+let img_play;
+let img_exit;
 let img_bag;
 let img_bg;
 let img_good1;
@@ -70,6 +78,9 @@ async function setup() {
   }
   img_default.updatePixels();
   
+  img_bg_blue = img_default;
+  img_play = img_default;
+  img_exit = img_default;
   img_bag = img_default;
   img_bg = img_default;
   img_good1 = img_default;
@@ -82,6 +93,9 @@ async function setup() {
   img_good8 = img_default;
   img_bad1 = img_default;
   
+  img_bg_blue = await loadImage('img/blue-dither-bg.png');
+  img_play = await loadImage('img/PLAY.png');
+  img_exit = await loadImage('img/EXIT.png');
   img_bg = await loadImage('img/pixel_bg.png');
   img_bag = await loadImage('img/pixel_bag.png');
   img_good1 = await loadImage('img/pixel_good1.png');
@@ -92,7 +106,7 @@ async function setup() {
   img_good6 = await loadImage('img/pixel_good6.png');
   img_good7 = await loadImage('img/pixel_good7.png');
   img_good8 = await loadImage('img/pixel_good8.png');
-    img_bad1 = await loadImage('img/pixel_bad1.png');
+  img_bad1 = await loadImage('img/pixel_bad1.png');
     //img_bad2 = await loadImage('img/pixel_bad2.png');
     
     startTextH1 = 100;
@@ -171,16 +185,56 @@ function draw() {
       image(img_bag, canvasX/2, canvasY*.59, canvasY*.35, canvasY*.35); // pixel
     }
     
-    rectMode(CENTER);
-    rect(canvasX/2, canvasY*.8, 250*sc, 80*sc, 25*sc);
+    image(img_play, canvasX/2, canvasY*.85, 260*sc, 260*sc);
     
-    textSize(35*sc);
-    textFont(f3);
-    textAlign(CENTER, CENTER);
-    fill(255);
-    text("PLAY", canvasX/2, canvasY*.8);
+    //rectMode(CENTER);
+    //rect(canvasX/2, canvasY*.8, 250*sc, 80*sc, 25*sc);
+    //
+    //textSize(35*sc);
+    //textFont(f3);
+    //textAlign(CENTER, CENTER);
+    //fill(255);
+    //text("PLAY", canvasX/2, canvasY*.8);
     
-  } else if(gameState == 1){ // WHILE IN PLAY ////////////////////////////////////////////////////////////////////////////////
+  } else if (gameState == 1){ // INSTRUCTIONS ////////////////////////////////////////////////////////////////////
+    imageMode(CORNER);
+      image(img_bg, 0,0,canvasX,canvasY);
+      background(255,255,255,160);
+    
+    textSize(textH1*.8);
+    textFont(f1);
+    text("Pack for class!", canvasX/2, canvasY*.15);
+    
+    imageMode(CENTER);
+    //text("instructions", 100, 100);
+    //fill(255,0,0);
+    //circle((canvasX/2)+(myWeirdEase(anim)*canvasX*1.5), canvasY/2, 100);
+    image(img_bad1,(canvasX/2)+(myWeirdEase(anim)*canvasX*1.5), canvasY*.5, bagSize*1.2, bagSize*1.2);
+    //fill(0,255,0);
+    //circle((canvasX/2)+(myWeirdEase((anim+.5) % 1)*canvasX*1.5), canvasY/2, 100, 100);
+    image(img_good1,(canvasX/2)+(myWeirdEase((anim+.5) % 1)*canvasX*1.5), canvasY*.5, bagSize*1.2, bagSize*1.2);
+
+    
+    if (((anim+.25) % 1) < .5){
+      fill(c2);
+      textSize(textH2*.6);
+      textFont(f2);
+      text("CATCH THE ESSENTIALS.", canvasX/2, canvasY*.23);
+    } else {
+      fill(c2);
+      textSize(textH2*.6);
+      textFont(f2);
+      text("AVOID BAD GRADES.", canvasX/2, canvasY*.23);
+    }
+    
+    image(img_play, canvasX/2, canvasY*.85, 260*sc, 260*sc);
+    
+    if (anim < 1){
+      anim = anim + .0025;
+    } else{
+      anim = 0;
+    }
+  } else if(gameState == 2){ // WHILE IN PLAY ////////////////////////////////////////////////////////////////////////////////
     if (look==1){
       background(c1);
     } else {
@@ -237,21 +291,28 @@ function draw() {
     text(score, canvasX/2, 100*sc);
     pop();
 
-  } else if(gameState == 2){ // ENDING SCREEN ////////////////////////////////////////////////////////////////////////////////
-    background(c2);
+  } else if(gameState == 3){ // ENDING SCREEN ////////////////////////////////////////////////////////////////////////////////
+    imageMode(CORNER);
+    image(img_bg_blue, 0, 0, canvasX, canvasY);
+    //background(c2);
     
     noStroke();
     textAlign(CENTER, CENTER);
-    fill(255);
+    fill(192, 228, 255);
     
     stroke(c2);
-    textSize(textH1); // UI
-    textFont(f1);
+    textSize(textH2*1.45); // UI
+    textFont(f2);
     text("GAME OVER", canvasX/2, 110*sc);
-    textSize(textH2);
-    //textFont(f3);
     textSize(textH3);
-    text("points: " + score, canvasX/2, 180*sc);
+    text("SCORE:", canvasX/2, 180*sc);
+    textFont(f1);
+    textSize(textH1*2);
+    fill(255);
+    text(score, canvasX/2, 280*sc);
+    
+    imageMode(CENTER);
+    image(img_exit, canvasX/2, canvasY*.85, 260*sc, 260*sc);
   }
 }
 
@@ -278,7 +339,7 @@ function calcCanvas(){
 }
 
 function calcItemSpeed(){
-  itemSpeed = startItemSpeed*(Math.pow(1.25,level))*sc;
+  itemSpeed = startItemSpeed*(Math.pow(levelSpeedMult,level))*sc;
 }
 
 function handleInput(){
@@ -308,19 +369,20 @@ function mouseClicked(){
 }
 
 function interact(){
-  if(gameState == 0){
+  if(gameState < 2){
     resetGame();
     gameState++;
-  } else if(gameState == 2){
+  } else if(gameState == 3){
     resetGame();
+    gameState = 0;
   }
 }
 
 function nextLevel(){
   level++;
   calcItemSpeed();
-  itemSpawnTime = itemSpawnTime * .6;
-  pointGoal = pointGoal*2;
+  itemSpawnTime = itemSpawnTime * levelSpawnMult;
+  pointGoal = pointGoal*levelGoalMult;
 }
 
 function resetGame(){
@@ -331,7 +393,6 @@ function resetGame(){
   score = 0;
   level = 1;
   currentItemSpawnTime = 0;
-  gameState = 0;
   gameTime = 0;
 }
 
@@ -341,6 +402,14 @@ function showAllItems(){
   }
 }
 
+function easeInOut(x){
+  return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+}
+
+function myWeirdEase(x){
+  x = (x-.5)*2;
+  return (x)*(.3+Math.abs(x));
+}
 
 
 class Item {
