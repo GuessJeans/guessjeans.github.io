@@ -49,6 +49,7 @@ let img_play;
 let img_exit;
 let img_bag;
 let img_bg;
+let img_spill;
 let img_good1;
 let img_good2;
 let img_good3;
@@ -83,6 +84,7 @@ async function setup() {
   img_exit = img_default;
   img_bag = img_default;
   img_bg = img_default;
+  img_spill - img_default;
   img_good1 = img_default;
   img_good2 = img_default;
   img_good3 = img_default;
@@ -98,6 +100,7 @@ async function setup() {
   img_exit = await loadImage('img/EXIT.png');
   img_bg = await loadImage('img/pixel_bg.png');
   img_bag = await loadImage('img/pixel_bag.png');
+  img_spill = await loadImage('img/spill.png');
   img_good1 = await loadImage('img/pixel_good1.png');
   img_good2 = await loadImage('img/pixel_good2.png');
   img_good3 = await loadImage('img/pixel_good3.png');
@@ -214,8 +217,19 @@ function draw() {
     image(img_bad1,(canvasX/2)+(myWeirdEase(anim)*canvasX*1.5), canvasY*.5, bagSize*1.2, bagSize*1.2);
     //fill(0,255,0);
     //circle((canvasX/2)+(myWeirdEase((anim+.5) % 1)*canvasX*1.5), canvasY/2, 100, 100);
-    image(img_good1,(canvasX/2)+(myWeirdEase((anim+.5) % 1)*canvasX*1.5), canvasY*.5, bagSize*1.2, bagSize*1.2);
-
+    image(img_good1,
+          (canvasX/2)+(myWeirdEase((anim+.5) % 1)*canvasX*1.5),
+          canvasY*.5,
+          bagSize*1.2, bagSize*1.2);
+    image(img_good2,
+          (canvasX/2)+(myWeirdEase((anim+.45) % 1)*canvasX*1.5),
+          canvasY*.57,
+          bagSize*.8, bagSize*.8);
+    image(img_good3,
+          (canvasX/2)+(myWeirdEase((anim+.42) % 1)*canvasX*1.5)-10,
+          canvasY*.45,
+          bagSize*.5, bagSize*.5);
+    
     
     if (((anim+.25) % 1) < .5){
       fill(c2);
@@ -309,11 +323,13 @@ function draw() {
     textSize(textH3);
     text("SCORE:", canvasX/2, 180*sc);
     textFont(f1);
-    textSize(textH1*2);
+    textSize(textH1*1.8);
     fill(255);
     text(score, canvasX/2, 280*sc);
     
     imageMode(CENTER);
+    image(img_spill, canvasX/2, canvasY*.59, canvasX*.7, canvasX*.7);
+    
     image(img_exit, canvasX/2, canvasY*.85, 260*sc, 260*sc);
   }
 }
@@ -456,7 +472,7 @@ class Item {
 
   inBag(mX,mY){
     let result = false;
-    let d = dist(mX, mY, this.x, this.y);
+    let d = dist(mX, mY+(itemSize*2.3), this.x, this.y);
     if (!this.isGood){
       d = d+(5*sc);
     }
