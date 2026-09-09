@@ -179,11 +179,13 @@ function draw() {
     imageMode(CENTER);
     noSmooth();
     
-    if (look==1){
-      image(img_bag, canvasX/2, canvasY*.56, canvasY*.3, canvasY*.3); // flat
-    } else {
-      image(img_bag, canvasX/2, canvasY*.59, canvasY*.35, canvasY*.35); // pixel
-    }
+    //if (look==1){
+    //  image(img_bag, canvasX/2, canvasY*.56, canvasY*.3, canvasY*.3); // flat
+    //} else {
+    //  image(img_bag, canvasX/2, canvasY*.59, canvasY*.35, canvasY*.35); // pixel
+    //}
+    
+    image(img_bag, canvasX/2, canvasY*.6+(cos(millis()/350)*10), canvasY*.35, canvasY*.35); // pixel
     
     image(img_play, canvasX/2, canvasY*.85, 260*sc, 260*sc);
     
