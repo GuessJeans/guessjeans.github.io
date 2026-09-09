@@ -58,6 +58,7 @@ let img_good5;
 let img_good6;
 let img_good7;
 let img_good8;
+let img_good9;
 let img_bad1;
 //let img_bad2;
 let itemImagesGood;
@@ -67,6 +68,10 @@ let c2;
 let f1;
 let f2;
 let f3;
+
+let sfx_coin;
+let sfx_minusLife;
+let sfx_lose;
 
 async function setup() {
   //default image
@@ -93,6 +98,7 @@ async function setup() {
   img_good6 = img_default;
   img_good7 = img_default;
   img_good8 = img_default;
+  img_good9 = img_default;
   img_bad1 = img_default;
   
   img_bg_blue = await loadImage('img/blue-dither-bg.png');
@@ -109,8 +115,12 @@ async function setup() {
   img_good6 = await loadImage('img/pixel_good6.png');
   img_good7 = await loadImage('img/pixel_good7.png');
   img_good8 = await loadImage('img/pixel_good8.png');
+  img_good9 = await loadImage('img/pixel_good9.png');
   img_bad1 = await loadImage('img/pixel_bad1.png');
-    //img_bad2 = await loadImage('img/pixel_bad2.png');
+  
+  sfx_coin = await loadSound('sound/coin.mp3');
+  sfx_minusLife = await loadSound('sound/minusLife.mp3');
+  sfx_lose = await loadSound('sound/lose.mp3');
     
     startTextH1 = 100;
     startTextH2 = 50;
@@ -119,7 +129,7 @@ async function setup() {
     startBagSize = startBagSize;
     startItemSize = startItemSize;
   
-  itemImagesGood = [img_good1, img_good2, img_good3, img_good4, img_good5, img_good6, img_good7, img_good8];
+  itemImagesGood = [img_good1, img_good2, img_good3, img_good4, img_good5, img_good6, img_good7, img_good8, img_good9];
   itemImagesBad = [img_bad1];
 
   if (look == 1){
@@ -272,15 +282,18 @@ function draw() {
       //items[i].show();
       if(items[i].offScreen() && items[i].isGood){
         gameState++;
+        sfx_lose.play();
       }
       if(items[i].inBag(bagX, bagY)){
         if(items[i].isGood){
+          sfx_coin.play();
           score++;
           bag.goodAnim();
           if (score >= pointGoal){
             nextLevel();
           }
         } else {
+          sfx_lose.play();
           bag.badAnim();
           gameState++;
         }
@@ -308,6 +321,7 @@ function draw() {
     pop();
 
   } else if(gameState == 3){ // ENDING SCREEN ////////////////////////////////////////////////////////////////////////////////
+    
     imageMode(CORNER);
     image(img_bg_blue, 0, 0, canvasX, canvasY);
     //background(c2);
