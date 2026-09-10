@@ -128,7 +128,7 @@ async function setup() {
   sfx_coin = await loadSound('sound/coin.mp3');
   sfx_minusLife = await loadSound('sound/minusLife.mp3');
   sfx_lose = await loadSound('sound/lose.mp3');
-  sfx_music = await loadSound('sound/music.wav');
+  sfx_music = await loadSound('sound/music.mp3');
   
   sfx_music.loop(true);
     
