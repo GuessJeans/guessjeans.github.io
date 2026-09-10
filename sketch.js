@@ -437,7 +437,12 @@ function handleInput(){
 }
 
 function mouseClicked(){
+  userStartAudio();
   interact();
+}
+
+function touchStarted() {
+  userStartAudio();
 }
 
 function interact(){
