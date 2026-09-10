@@ -446,7 +446,6 @@ function interact(){
     gameState++;
     if(gameState == 2){
       sfx_music.play();
-      sfx_music.setVolume(.3);
     }
   } else if(gameState == 3){
     resetGame();
