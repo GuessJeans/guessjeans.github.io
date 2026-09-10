@@ -132,12 +132,12 @@ async function setup() {
   
   sfx_music.loop(true);
     
-    startTextH1 = 100;
-    startTextH2 = 50;
-    startTextH3 = 35;
+  startTextH1 = 100;
+  startTextH2 = 50;
+  startTextH3 = 35;
     
-    startBagSize = startBagSize;
-    startItemSize = startItemSize;
+  startBagSize = startBagSize;
+  startItemSize = startItemSize;
   
   itemImagesGood = [img_good1, img_good2, img_good3, img_good4, img_good5, img_good6, img_good7, img_good8, img_good9];
   itemImagesBad = [img_bad1];
@@ -394,8 +394,10 @@ function calcCanvas(){
     canvasY = windowHeight;
     canvasX = windowHeight*gameAspect;
   } else {
+    //canvasX = windowWidth;
+    //canvasY = windowWidth/gameAspect;
     canvasX = windowWidth;
-    canvasY = windowWidth/gameAspect;
+    canvasY = windowHeight;
   }
   sc = canvasX/540;
   bagSize = startBagSize*sc;
@@ -408,6 +410,7 @@ function calcCanvas(){
   //console.log("scale: " + scale);
   //console.log("bagSize: " + bagSize);
   //console.log("itemSize: " + itemSize);
+  //text("CALCCANVAS", 200,200)
 }
 
 function calcItemSpeed(){
@@ -450,6 +453,7 @@ function interact(){
     resetGame();
     gameState++;
     if(gameState == 2){
+      userStartAudio();
       sfx_music.play();
     }
   } else if(gameState == 3){
