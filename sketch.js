@@ -50,6 +50,8 @@ let img_exit;
 let img_bag;
 let img_bg;
 let img_spill;
+let img_heart_full;
+let img_heart_empty;
 let img_good1;
 let img_good2;
 let img_good3;
@@ -72,6 +74,7 @@ let f3;
 let sfx_coin;
 let sfx_minusLife;
 let sfx_lose;
+let sfx_music;
 
 async function setup() {
   //default image
@@ -100,6 +103,8 @@ async function setup() {
   img_good8 = img_default;
   img_good9 = img_default;
   img_bad1 = img_default;
+  img_heart_full = img_default;
+  img_heart_empty = img_default;
   
   img_bg_blue = await loadImage('img/blue-dither-bg.png');
   img_play = await loadImage('img/PLAY.png');
@@ -117,10 +122,15 @@ async function setup() {
   img_good8 = await loadImage('img/pixel_good8.png');
   img_good9 = await loadImage('img/pixel_good9.png');
   img_bad1 = await loadImage('img/pixel_bad1.png');
+  img_heart_full = await loadImage('img/heart_full.png');
+  img_heart_empty = await loadImage('img/heart_empty.png');
   
   sfx_coin = await loadSound('sound/coin.mp3');
   sfx_minusLife = await loadSound('sound/minusLife.mp3');
   sfx_lose = await loadSound('sound/lose.mp3');
+  sfx_music = await loadSound('sound/music.wav');
+  
+  sfx_music.loop(true);
     
     startTextH1 = 100;
     startTextH2 = 50;
@@ -157,7 +167,6 @@ function windowResized(){
 
 function draw() { 
   handleInput();
-
   if(gameState == 0){ // LOAD SCREEN ///////////////////////////////////////////////////////////////////////////////////////
     if(look==1){
       background(c1);
@@ -276,13 +285,16 @@ function draw() {
       items.push(item);
       currentItemSpawnTime = currentItemSpawnTime + itemSpawnTime;
     }
+    
+  
 
     for(let i=0; i<items.length; i++){
+      spliceAfter = false;
       items[i].move();
       //items[i].show();
       if(items[i].offScreen() && items[i].isGood){
-        gameState++;
-        sfx_lose.play();
+        loseLife();
+        spliceAfter = true;
       }
       if(items[i].inBag(bagX, bagY)){
         if(items[i].isGood){
@@ -293,10 +305,11 @@ function draw() {
             nextLevel();
           }
         } else {
-          sfx_lose.play();
-          bag.badAnim();
-          gameState++;
+          loseLife();
         }
+        items.splice(i,1);
+      }
+      if (spliceAfter){
         items.splice(i,1);
       }
     }
@@ -307,6 +320,22 @@ function draw() {
     //square(bagX-(bagSize/2), bagY-(bagSize/2), bagSize); // bag
     bag.move();
     bag.show();
+    
+    imageMode(CENTER);
+    
+    if(lives == 3){
+      image(img_heart_full, canvasX*.15, canvasX*.15, canvasX*.1, canvasX*.1);
+      image(img_heart_full, canvasX*.3, canvasX*.15, canvasX*.1, canvasX*.1);
+      image(img_heart_full, canvasX*.45, canvasX*.15, canvasX*.1, canvasX*.1);
+    } else if (lives == 2){
+      image(img_heart_full, canvasX*.15, canvasX*.15, canvasX*.1, canvasX*.1);
+      image(img_heart_full, canvasX*.3, canvasX*.15, canvasX*.1, canvasX*.1);
+      image(img_heart_empty, canvasX*.45, canvasX*.15, canvasX*.1, canvasX*.1);
+    } else if (lives == 1){
+      image(img_heart_full, canvasX*.15, canvasX*.15, canvasX*.1, canvasX*.1);
+      image(img_heart_empty, canvasX*.3, canvasX*.15, canvasX*.1, canvasX*.1);
+      image(img_heart_empty, canvasX*.45, canvasX*.15, canvasX*.1, canvasX*.1);
+    }
 
     push();
     //noStroke();
@@ -317,7 +346,7 @@ function draw() {
     textAlign(CENTER);
     textSize(textH1); // UI
     textWeight(1*sc);
-    text(score, canvasX/2, 100*sc);
+    text(score, canvasX*.85, canvasX*.15);
     pop();
 
   } else if(gameState == 3){ // ENDING SCREEN ////////////////////////////////////////////////////////////////////////////////
@@ -345,6 +374,17 @@ function draw() {
     image(img_spill, canvasX/2, canvasY*.59, canvasX*.7, canvasX*.7);
     
     image(img_exit, canvasX/2, canvasY*.85, 260*sc, 260*sc);
+  }
+}
+
+function loseLife(){
+  sfx_minusLife.play();
+  lives = lives - 1;
+  if (lives <= 0){
+    gameState = 3;
+    sfx_music.stop();
+    sfx_lose.play();
+    lives = 3;
   }
 }
 
@@ -404,6 +444,10 @@ function interact(){
   if(gameState < 2){
     resetGame();
     gameState++;
+    if(gameState == 2){
+      sfx_music.play();
+      sfx_music.setVolume(.3);
+    }
   } else if(gameState == 3){
     resetGame();
     gameState = 0;
@@ -446,6 +490,7 @@ function myWeirdEase(x){
 
 class Item {
   constructor(x,y){
+    //this.value = 1;
     this.x = x;
     this.y = y;
     this.isGood = true;
@@ -456,6 +501,9 @@ class Item {
       this.img = itemImagesBad[Math.floor(Math.random() * itemImagesBad.length)];
     } else {
       this.img = itemImagesGood[Math.floor(Math.random() * itemImagesGood.length)];
+      //if (i == 0){
+      //  this.value = 10;
+      //}
     }
   }
 
@@ -482,6 +530,13 @@ class Item {
     imageMode(CENTER);
     image(this.img, this.x, this.y, itemSize*2, itemSize*2);
     pop();
+    
+    //if (this.value == 10){
+    //  stroke(c2);
+    //  textSize(textH3); // UI
+    //  textFont(f2);
+    //  text("+10", this.x+itemSize, this.y+itemSize);
+    //}
   }
 
   inBag(mX,mY){
