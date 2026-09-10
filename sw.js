@@ -6,8 +6,8 @@ const ASSETS = [
   'manifest.json',
   'icon-192.png',
   'icon-512.png',
-  'https://cdn.jsdelivr.net/npm/p5@2.3.2/lib/p5.js',
-  'https://cdn.jsdelivr.net/npm/p5.sound@0.4.1/dist/p5.sound.min.js'
+  'p5.min.js',
+  'p5.sound.min.js'
 ];
 
 // Install the Service Worker and save files to cache
